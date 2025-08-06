@@ -7,6 +7,7 @@ import SignIn from './pages/SignIN'
 import Projects from './pages/Projects'
 import Dashboard from './pages/Dashboard'
 import Header from './components/Header'
+import Footer from './components/footer'
 
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
 
 
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }
