@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "https://www.needpix.com/photo/467175/blank-profile-picture-mystery-man-avatar-display-pic-profile-man-person-profile-icon-portrait",
     },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    },
     }, {timestamps: true}
 );
 
