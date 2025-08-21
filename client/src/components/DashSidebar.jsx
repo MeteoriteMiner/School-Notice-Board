@@ -59,7 +59,7 @@ export default function DashSidebar() {
                 icon={HiDocumentText}
                 as='div'
               >
-                Posts
+                Notices
               </SidebarItem>
             </Link>
           )}
