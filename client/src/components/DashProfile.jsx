@@ -16,8 +16,10 @@ import {
 } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import {HiOutlineExclamationCircle} from 'react-icons/hi';
+import { Link } from 'react-router-dom';
+
 export default function DashProfile() {
-    const {currentUser, error} = useSelector(state => state.user);
+    const {currentUser, error, loading} = useSelector(state => state.user);
     const [imageFile, setImageFile] = useState(null);
     const [imageFileUrl, setImageFileUrl] = useState(null);
     const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -196,9 +198,19 @@ export default function DashProfile() {
             <TextInput type='password' id='password' placeholder='password' onChange={handleChange}/>
             <Button type='submit' className="bg-gradient-to-r
              from-teal-200 to-lime-200 text-gray-900 hover:bg-gradient-to-l
-              hover:from-teal-200 hover:to-purple-700 focus:ring-purple-700 dark:focus:ring-teal-700" outline>
-                Update
+              hover:from-teal-200 hover:to-purple-700 focus:ring-purple-700 dark:focus:ring-teal-700" 
+              outline disabled={loading || imageFileUploading}>
+                {loading ? 'Loading...' : 'Update'}
             </Button>
+            {currentUser.isAdmin && (
+              <Link to={'/create-post'}>
+                <Button type='button' className="w-full bg-gradient-to-r
+             from-teal-200 to-lime-200 text-gray-900 hover:bg-gradient-to-l
+              hover:from-teal-200 hover:to-purple-700 focus:ring-purple-700 dark:focus:ring-teal-700" >
+                    Post a notice
+                </Button>
+              </Link>
+            )}
         </form>
         <div className='text-red-900 flex justify-between mt-5'>
             <span onClick={()=>setShowModal(true)} className='cursor-pointer'>Delete Account</span>
