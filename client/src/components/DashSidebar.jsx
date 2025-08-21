@@ -1,15 +1,17 @@
 import React from 'react';
-import { Sidebar, SidebarItems,SidebarItemGroup, SidebarItem } from 'flowbite-react';
-import { HiArrowSmRight, HiUser } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
+import { Sidebar, SidebarItems, SidebarItem, SidebarItemGroup } from 'flowbite-react';
+import { HiArrowSmRight, HiUser, HiDocumentText } from 'react-icons/hi';
 import { useLocation, Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { signoutSuccess } from '../redux/user/userSlice';
-import { useDispatch } from 'react-redux';
 
 export default function DashSidebar() {
   const location = useLocation();
   const [tab, setTab] = useState('');
   const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.user);
+
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get('tab');
@@ -17,34 +19,60 @@ export default function DashSidebar() {
       setTab(tabFromUrl);
     }
   }, [location.search]);
+
   const handleSignout = async () => {
-        try {
-          const res = await fetch('/api/user/signout', {
-            method: 'POST',
-          });
-          if (!res.ok) {
-            console.log(data.message);
-          } else{
-            dispatch(signoutSuccess());
-          }
-        } catch (error) {
-          console.log(error.message);
-        }
-      };
+    try {
+      const res = await fetch('/api/user/signout', {
+        method: 'POST',
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <Sidebar className='w-full md:w-56'>
-        <SidebarItems> 
-            <SidebarItemGroup>
-                <Link to='/dashboard?tab=profile'>
-                    <SidebarItem active={tab === 'profile' } icon={HiUser} label={"User"} labelColor='dark'as='div'>
-                        Profile
-                    </SidebarItem>
-                </Link>
-                <SidebarItem icon={HiArrowSmRight} className='cursor-pointer' onClick={handleSignout}>
-                    Sign Out
-                </SidebarItem>
-            </SidebarItemGroup>
-        </SidebarItems>
+      <SidebarItems>
+        <SidebarItemGroup className='flex flex-col gap-1'>
+          <Link to='/dashboard?tab=profile'>
+            <SidebarItem
+              active={tab === 'profile'}
+              icon={HiUser}
+              label={currentUser.isAdmin ? 'Admin' : 'User'}
+              labelColor='dark'
+              as='div'
+            >
+              Profile
+            </SidebarItem>
+          </Link>
+
+          {currentUser.isAdmin && (
+            <Link to='/dashboard?tab=posts'>
+              <SidebarItem
+                active={tab === 'posts'}
+                icon={HiDocumentText}
+                as='div'
+              >
+                Posts
+              </SidebarItem>
+            </Link>
+          )}
+
+          <SidebarItem
+            icon={HiArrowSmRight}
+            className='cursor-pointer'
+            onClick={handleSignout}
+          >
+            Sign Out
+          </SidebarItem>
+        </SidebarItemGroup>
+      </SidebarItems>
     </Sidebar>
-  )
+  );
 }
