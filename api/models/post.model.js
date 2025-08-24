@@ -18,7 +18,7 @@ const postSchema = new mongoose.Schema(
     image: {
       type: String,
       default:
-        'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/important-notice-design-template-8deb4abe7794cf8683ea0de8ce1ac87b_screen.jpg?ts=1737465341',
+        'https://media.istockphoto.com/id/599124676/photo/back-to-school.jpg?s=612x612&w=0&k=20&c=AVeq7nPyZhXRWdhHSvP_0qoL6MB-fVlZpQZ0oOObPR8=',
     },
     category: {
       type: String,
