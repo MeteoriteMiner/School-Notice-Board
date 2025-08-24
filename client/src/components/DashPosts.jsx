@@ -4,19 +4,18 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { set } from 'mongoose';
 
 export default function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [postIdToDelete, setPostIdToDelete] = useState('');
+  const [postIdToDelete, setPostIdToDelete] = useState('');  
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`);
+        const res = await fetch('/api/post/getposts');
         const data = await res.json();
         if (res.ok) {
           setUserPosts(data.posts);
@@ -28,7 +27,8 @@ export default function DashPosts() {
         console.log(error.message);
       }
     };
-    if (currentUser.isAdmin) {
+
+    if (currentUser) {
       fetchPosts();
     }
   }, [currentUser._id]);
@@ -36,9 +36,7 @@ export default function DashPosts() {
   const handleShowMore = async () => {
     const startIndex = userPosts.length;
     try {
-      const res = await fetch(
-        `/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
-      );
+      const res = await fetch(`/api/post/getposts?startIndex=${startIndex}`);
       const data = await res.json();
       if (res.ok) {
         setUserPosts((prev) => [...prev, ...data.posts]);
@@ -73,10 +71,9 @@ export default function DashPosts() {
     }
   };
 
-
-  return (
+return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-      {currentUser.isAdmin && userPosts.length > 0 ? (
+      {userPosts.length > 0 ? (
         <>
           <Table hoverable className='shadow-md'>
             <TableHead>
@@ -84,13 +81,17 @@ export default function DashPosts() {
               <TableHeadCell>Notice image</TableHeadCell>
               <TableHeadCell>Notice title</TableHeadCell>
               <TableHeadCell>Category</TableHeadCell>
-              <TableHeadCell>Delete</TableHeadCell>
-              <TableHeadCell>
-                <span>Edit</span>
-              </TableHeadCell>
+              {currentUser.isAdmin && (
+                <>
+                  <TableHeadCell>Delete</TableHeadCell>
+                  <TableHeadCell>
+                    <span>Edit</span>
+                  </TableHeadCell>
+                </>
+              )}
             </TableHead>
             {userPosts.map((post) => (
-              <TableBody className='divide-y'>
+              <TableBody key={post._id} className='divide-y'>
                 <TableRow className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                   <TableCell>
                     {new Date(post.updatedAt).toLocaleDateString()}
@@ -113,25 +114,29 @@ export default function DashPosts() {
                     </Link>
                   </TableCell>
                   <TableCell>{post.category}</TableCell>
-                  <TableCell>
-                    <span
-                      onClick={() => {
-                        setShowModal(true);
-                        setPostIdToDelete(post._id);
-                      }}
-                      className='font-medium text-red-500 hover:underline cursor-pointer'
-                    >
-                      Delete
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <Link
-                      className='text-teal-500 hover:underline'
-                      to={`/update-post/${post._id}`}
-                    >
-                      <span>Edit</span>
-                    </Link>
-                  </TableCell>
+                  {currentUser.isAdmin && (
+                    <>
+                      <TableCell>
+                        <span
+                          onClick={() => {
+                            setShowModal(true);
+                            setPostIdToDelete(post._id);
+                          }}
+                          className='font-medium text-red-500 hover:underline cursor-pointer'
+                        >
+                          Delete
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <Link
+                          className='text-teal-500 hover:underline'
+                          to={`/update-post/${post._id}`}
+                        >
+                          <span>Edit</span>
+                        </Link>
+                      </TableCell>
+                    </>
+                  )}
                 </TableRow>
               </TableBody>
             ))}
@@ -146,7 +151,7 @@ export default function DashPosts() {
           )}
         </>
       ) : (
-        <p>You have no notices yet!</p>
+        <p>No notices available!</p>
       )}
       <Modal
         show={showModal}
