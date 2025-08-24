@@ -102,6 +102,7 @@ export default function CreatePost() {
                 <option value="exam">Exam</option>
                 <option value="holiday">Holiday</option>
                 <option value="advising">Advising</option>
+                <option value="eca">ECA</option>
             </Select>
         </div>
         <div className='flex gap-4 items-center justify-between border-4

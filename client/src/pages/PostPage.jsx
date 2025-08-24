@@ -28,6 +28,7 @@ export default function PostPage() {
           setPost(data.posts[0]);
           setLoading(false);
           setError(false);
+          
         }
       } catch (error) {
         setError(true);

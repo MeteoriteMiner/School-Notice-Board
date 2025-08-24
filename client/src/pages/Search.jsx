@@ -135,6 +135,7 @@ export default function Search() {
               <option value='holiday'>Holiday</option>
               <option value='exam'>Exam</option>
               <option value='advising'>Advising</option>
+              <option value='eca'>ECA</option>
             </Select>
           </div>
           <Button type='submit' outline className="bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 text-gray-900 hover:bg-gradient-to-bl focus:ring-red-100 dark:focus:ring-red-400">
