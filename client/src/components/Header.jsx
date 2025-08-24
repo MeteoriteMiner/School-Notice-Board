@@ -84,7 +84,7 @@ export default function Header() {
            <NavbarToggle />  
         </div>
         <NavbarCollapse>
-                <NavbarLink as={Link} to="/home" className={path === "/home" ? "text-teal-400 font-semibold" : ""}>
+                <NavbarLink as={Link} to="/" className={path === "/" ? "text-teal-400 font-semibold" : ""}>
                     Home
                 </NavbarLink >
                 <NavbarLink as={Link} to="/about" className={path === "/about" ? "text-teal-400 font-semibold" : ""}>
